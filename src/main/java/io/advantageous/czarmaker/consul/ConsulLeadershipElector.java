@@ -1,13 +1,5 @@
 package io.advantageous.czarmaker.consul;
 
-import io.advantageous.boon.json.JsonFactory;
-import io.advantageous.consul.Consul;
-import io.advantageous.consul.domain.KeyValue;
-import io.advantageous.consul.domain.Session;
-import io.advantageous.consul.domain.SessionBehavior;
-import io.advantageous.consul.domain.option.KeyValuePutOptions;
-import io.advantageous.consul.endpoints.KeyValueStoreEndpoint;
-import io.advantageous.consul.endpoints.SessionEndpoint;
 import io.advantageous.czarmaker.Endpoint;
 import io.advantageous.czarmaker.LeaderElector;
 import io.advantageous.reakt.Callback;
@@ -25,46 +17,31 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static io.advantageous.boon.json.JsonFactory.fromJson;
 
 public class ConsulLeadershipElector implements LeaderElector {
 
     protected final Logger logger = LoggerFactory.getLogger(ConsulLeadershipElector.class);
 
 
-    private final KeyValueStoreEndpoint kvStore;
-    private final SessionEndpoint sessionManager;
     private final Reactor reactor;
     private final String serviceName;
-    private final String path;
-    private final TimeUnit timeUnit;
-    private final long sessionLifeTTL;
-    private AtomicReference<Endpoint> currentLeader = new AtomicReference<>();
-
+    private final LeadershipProvider leadershipProvider;
+    protected AtomicReference<Endpoint> currentLeader = new AtomicReference<>();
     private final CopyOnWriteArrayList<Stream<Endpoint>> listeners = new CopyOnWriteArrayList<>();
-
     private AtomicBoolean leader = new AtomicBoolean();
     private AtomicReference<String> sessionId = new AtomicReference<>();
-
-    private final String PATH = "service/%s/leader";
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-
     private ExecutorService outExecutorService = Executors.newSingleThreadExecutor();
 
-    public ConsulLeadershipElector(final String serviceName,
-                                   final Consul consul,
+    public ConsulLeadershipElector(final LeadershipProvider leadershipProvider,
+                                   final String serviceName,
                                    final Reactor reactor,
                                    final TimeUnit timeUnit,
                                    final long sessionLifeTTL,
                                    final long newLeaderCheckInterval) {
         this.reactor = reactor;
         this.serviceName = serviceName;
-        this.kvStore = consul.keyValueStore();
-        this.sessionManager = consul.session();
-        this.path = String.format(PATH, serviceName);
-        this.timeUnit = timeUnit;
-        this.sessionLifeTTL = sessionLifeTTL;
+        this.leadershipProvider = leadershipProvider;
         init(reactor, timeUnit, sessionLifeTTL, newLeaderCheckInterval);
 
 
@@ -99,18 +76,18 @@ public class ConsulLeadershipElector implements LeaderElector {
                 getSessionFromConsul(); //Blocking call
             }
             try {
-                leader.set(kvStore.putValue(path,
-                        JsonFactory.toJson(endpoint), 0L, new KeyValuePutOptions(null, sessionId.get(), null)));
 
-                if (leader.get()) {
+                final boolean leader = leadershipProvider.electLeader(sessionId.get(), endpoint);
+
+                this.leader.set(leader);
+
+                if (this.leader.get()) {
                     currentLeader.set(endpoint);
                     notifyNewLeader(endpoint);
-
                 }
-                callback.reply(leader.get());
+                callback.reply(this.leader.get());
             }catch (Exception ex) {
-                callback.reject("Unable to put value " + path + " in attempt to become leader. for service "
-                        + serviceName, ex);
+                callback.reject("Unable to become leader. for service " + serviceName, ex);
             }
         });
 
@@ -131,10 +108,7 @@ public class ConsulLeadershipElector implements LeaderElector {
 
     private void getSessionFromConsul() {
         try {
-            Session session = new Session();
-            session.setName("serviceLeaderLock").setSessionBehavior(SessionBehavior.DELETE)
-                    .setTtlSeconds(timeUnit.toSeconds(sessionLifeTTL));
-            sessionId.set(sessionManager.create(session));
+            sessionId.set(leadershipProvider.createSession());
         }catch (Exception ex) {
             logger.error("Unable to create session", ex);
             throw new IllegalStateException(ex);
@@ -170,29 +144,29 @@ public class ConsulLeadershipElector implements LeaderElector {
         logger.debug("doLoadLeader called");
 
         executorService.submit((Runnable) () -> {
-            final Optional<KeyValue> keyValue = kvStore.getValue(path);
-            if (!keyValue.isPresent()) {
+
+            final Optional<Endpoint> leaderEndpoint = leadershipProvider.getLeader();
+
+            if (!leaderEndpoint.isPresent()) {
                 callbackOptional.ifPresent(endpointCallback -> endpointCallback.resolve(null));
             } else {
-                final String value = keyValue.get().getValue();
-                final Endpoint endpoint1 = fromJson(value, Endpoint.class);
 
-                callbackOptional.ifPresent(endpointCallback -> endpointCallback.resolve(endpoint1));
+                callbackOptional.ifPresent(endpointCallback -> endpointCallback.resolve(leaderEndpoint.get()));
 
                 /* If the current leader is not null, then check to see if this endpoint we loaded
                 is the same as the current leader. If it is not the same, notifyNewLeader stream.
                  */
                 if (currentLeader.get()!=null) {
-                    if (!currentLeader.get().equals(endpoint1)) {
-                        notifyNewLeader(endpoint1);
+                    if (!currentLeader.get().equals(leaderEndpoint.get())) {
+                        notifyNewLeader(leaderEndpoint.get());
                     }
                 }
                 /*
                  * If the current leader is null then send this leader out.
                  */
                 else {
-                    currentLeader.set(endpoint1);
-                    notifyNewLeader(endpoint1);
+                    currentLeader.set(leaderEndpoint.get());
+                    notifyNewLeader(leaderEndpoint.get());
                 }
             }
         });

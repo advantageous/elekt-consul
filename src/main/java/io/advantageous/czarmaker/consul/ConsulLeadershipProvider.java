@@ -9,7 +9,6 @@ import io.advantageous.consul.domain.option.KeyValuePutOptions;
 import io.advantageous.consul.endpoints.KeyValueStoreEndpoint;
 import io.advantageous.consul.endpoints.SessionEndpoint;
 import io.advantageous.czarmaker.Endpoint;
-import io.advantageous.reakt.reactor.Reactor;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +19,6 @@ public class ConsulLeadershipProvider implements LeadershipProvider {
 
     final String serviceName;
 
-    final Reactor reactor;
     final TimeUnit timeUnit;
     final long sessionLifeTTL;
 
@@ -30,10 +28,9 @@ public class ConsulLeadershipProvider implements LeadershipProvider {
     private final String path;
 
 
-    public ConsulLeadershipProvider(String serviceName, Consul consul, Reactor reactor, TimeUnit timeUnit,
+    public ConsulLeadershipProvider(String serviceName, Consul consul, TimeUnit timeUnit,
                                     long sessionLifeTTL) {
         this.serviceName = serviceName;
-        this.reactor = reactor;
         this.timeUnit = timeUnit;
         this.sessionLifeTTL = sessionLifeTTL;
         this.kvStore = consul.keyValueStore();
