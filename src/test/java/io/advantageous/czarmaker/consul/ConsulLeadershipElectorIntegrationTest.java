@@ -38,31 +38,38 @@ public class ConsulLeadershipElectorIntegrationTest {
                 sessionTTL, newLeaderCheckInterval);
 
 
+        /** Get the current leader. */
         Promise<Endpoint> promise = Promises.<Endpoint>blockingPromise();
         leadershipElector.getLeader(promise);
 
         assertTrue(promise.expect().isEmpty());
 
 
+        /** Elect this endpoint as the current leader. */
         Promise<Boolean> selfElectPromise = Promises.<Boolean>blockingPromise();
         leadershipElector.selfElect(new Endpoint("foo.com", 9091), selfElectPromise);
 
         assertTrue("We are now the leader", selfElectPromise.get());
 
 
+        /** Get the current leader again.  */
         Promise<Endpoint> getLeaderPromise = Promises.<Endpoint>blockingPromise();
         leadershipElector.getLeader(getLeaderPromise);
 
+        /** See if it present. */
         assertTrue(getLeaderPromise.expect().isPresent());
 
+        /** See if it has the host foo.com. */
         assertEquals("foo.com", getLeaderPromise.get().getHost());
 
+        /** See if the port is 9091. */
         assertEquals(9091, getLeaderPromise.get().getPort());
 
         testTimer.seconds(100);
 
         leadershipElector.process();
 
+        /** Elect a new leader. */
         leadershipElector.selfElect(new Endpoint("foo2.com", 9092), selfElectPromise);
 
 
