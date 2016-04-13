@@ -1,5 +1,5 @@
 # Czar Maker Consul
-Czar Maker is a Java lib for leadership election. ***Czar Maker Consul*** uses [Consul](https://www.consul.io/) to do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
+[Czar Maker is a Java](http://advantageous.github.io/czar-maker/) lib for leadership election. ***Czar Maker Consul*** uses [Consul](https://www.consul.io/) to do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
 
 ##Getting Started
 
