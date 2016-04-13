@@ -3,8 +3,6 @@ package io.advantageous.czarmaker.consul;
 import io.advantageous.consul.Consul;
 import io.advantageous.czarmaker.Endpoint;
 import io.advantageous.qbit.util.TestTimer;
-import io.advantageous.reakt.Stream;
-import io.advantageous.reakt.StreamResult;
 import io.advantageous.reakt.promise.Promise;
 import io.advantageous.reakt.promise.Promises;
 import io.advantageous.reakt.reactor.Reactor;
@@ -15,19 +13,19 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
 
 public class ConsulLeadershipElectorTest {
 
+    private final long sessionTTL = 10;
+    private final long newLeaderCheckInterval = 5;
     private ConsulLeadershipElector leadershipElector;
     private Reactor reactor;
     private TestTimer testTimer;
     private Consul consul;
-    private final long sessionTTL = 10;
-    private final long newLeaderCheckInterval = 5;
     private LeadershipProviderMock leadershipProviderMock;
 
 
@@ -35,13 +33,12 @@ public class ConsulLeadershipElectorTest {
     public void testSelfElect() throws Exception {
 
         leadershipProviderMock = new LeadershipProviderMock();
-        testTimer= new TestTimer();
+        testTimer = new TestTimer();
         testTimer.setTime();
         reactor = Reactor.reactor(Duration.ofSeconds(30), new TestTimeSource(testTimer));
         final String serviceName = "foo";
 
         AtomicReference<Endpoint> endpointAtomicReference = new AtomicReference<>();
-
 
 
         leadershipElector = new ConsulLeadershipElector(leadershipProviderMock, serviceName, reactor, TimeUnit.SECONDS,
@@ -65,7 +62,6 @@ public class ConsulLeadershipElectorTest {
         assertTrue("We are now the leader", selfElectPromise.get());
 
 
-
         Promise<Endpoint> getLeaderPromise = Promises.<Endpoint>blockingPromise();
         leadershipElector.getLeader(getLeaderPromise);
 
@@ -81,8 +77,6 @@ public class ConsulLeadershipElectorTest {
         leadershipElector.process();
 
         leadershipElector.selfElect(new Endpoint("foo2.com", 9092), selfElectPromise);
-
-
 
 
         leadershipProviderMock.clearLeader();
@@ -101,10 +95,6 @@ public class ConsulLeadershipElectorTest {
         Thread.sleep(10);
 
         leadershipElector.process();
-
-
-
-
 
 
         Promise<Endpoint> getLeaderPromise2 = Promises.<Endpoint>blockingPromise();
@@ -134,8 +124,18 @@ public class ConsulLeadershipElectorTest {
         }
 
         @Override
-        public Optional<Endpoint> getLeader() {
+        public Optional<Endpoint> getLeader(AtomicLong index) {
             return Optional.ofNullable(leaderEndpoint.get());
+        }
+
+        @Override
+        public Optional<Endpoint> getLeaderLongPoll(AtomicLong index) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getLeader(index);
         }
 
         void clearLeader() {
@@ -148,7 +148,7 @@ public class ConsulLeadershipElectorTest {
         }
 
         @Override
-        public boolean renewSession(String sessionId) {
+        public boolean renewSession(String sessionId, AtomicLong index) {
             return true;
         }
     }

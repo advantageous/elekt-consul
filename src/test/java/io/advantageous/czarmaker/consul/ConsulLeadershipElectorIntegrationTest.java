@@ -17,18 +17,17 @@ import static org.junit.Assert.assertTrue;
 
 public class ConsulLeadershipElectorIntegrationTest {
 
+    private final long sessionTTL = 10;
+    private final long newLeaderCheckInterval = 5;
     private ConsulLeadershipElector leadershipElector;
     private Reactor reactor;
     private TestTimer testTimer;
     private Consul consul;
-    private final long sessionTTL = 10;
-    private final long newLeaderCheckInterval = 5;
-
 
     @Test
     public void testSelfElect() throws Exception {
         consul = Consul.consul();
-        testTimer= new TestTimer();
+        testTimer = new TestTimer();
         testTimer.setTime();
         reactor = Reactor.reactor(Duration.ofSeconds(30), new TestTimeSource(testTimer));
         final String serviceName = "foo";
@@ -51,7 +50,6 @@ public class ConsulLeadershipElectorIntegrationTest {
         assertTrue("We are now the leader", selfElectPromise.get());
 
 
-
         Promise<Endpoint> getLeaderPromise = Promises.<Endpoint>blockingPromise();
         leadershipElector.getLeader(getLeaderPromise);
 
@@ -66,7 +64,6 @@ public class ConsulLeadershipElectorIntegrationTest {
         leadershipElector.process();
 
         leadershipElector.selfElect(new Endpoint("foo2.com", 9092), selfElectPromise);
-
 
 
     }
