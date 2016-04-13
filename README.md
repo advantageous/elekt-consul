@@ -1,5 +1,10 @@
 # Elekt Consul
-[Elekt is a Java](http://advantageous.github.io/elekt/) lib for leadership election. ***Elekt Consul*** uses [Consul](https://www.consul.io/) to do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
+[Elekt is a Java](http://advantageous.github.io/elekt/) lib for leadership election. 
+***Elekt Consul*** uses [Consul](https://www.consul.io/) to 
+do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
+
+(This project was called Czar Maker Consul but changed. 
+We have Reflekt, Reakt, Conekt and now Elekt.)
 
 ##Getting Started
 
