@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Czar-maker-consul by advantageous</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Czar-maker-consul</h1>
+        <p>Czar Maker implemented in Consul to do leadership election.</p>
+        <p class="view"><a href="https://github.com/advantageous/czar-maker-consul">View the Project on GitHub <small>advantageous/czar-maker-consul</small></a></p>
+        <ul>
+          <li><a href="https://github.com/advantageous/czar-maker-consul/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/advantageous/czar-maker-consul/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/advantageous/czar-maker-consul">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="czar-maker-consul" class="anchor" href="#czar-maker-consul" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Czar Maker Consul</h1>
+
+<p>Czar Maker is a Java lib for leadership election. <strong><em>Czar Maker Consul</em></strong> uses <a href="https://www.consul.io/">Consul</a> to do <a href="https://www.consul.io/docs/guides/leader-election.html">leadership election</a>.</p>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<h4>
+<a id="maven" class="anchor" href="#maven" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maven</h4>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;io.advantageous.czarmaker&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;czar-maker-consul&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;0.1.0.RELEASE&lt;/<span class="pl-ent">version</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<h4>
+<a id="gradle" class="anchor" href="#gradle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradle</h4>
+
+<div class="highlight highlight-source-java"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>io.advantageous.czarmaker:czar-maker-consul:0.1.0.RELEASE<span class="pl-pds">'</span></span></pre></div>
+
+<h4>
+<a id="sample-usage" class="anchor" href="#sample-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sample usage</h4>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.consul.Consul</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.czarmaker.Endpoint</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.czarmaker.consul.*</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.qbit.util.TestTimer</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.promise.Promise</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.promise.Promises</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.reactor.Reactor</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.reactor.TimeSource</span>;
+
+<span class="pl-c1">...</span>
+
+    <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-k">long</span> sessionTTL <span class="pl-k">=</span> <span class="pl-c1">10</span>;
+    <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-k">long</span> newLeaderCheckInterval <span class="pl-k">=</span> <span class="pl-c1">5</span>;
+    <span class="pl-k">private</span> <span class="pl-smi">ConsulLeadershipElector</span> leadershipElector;
+    <span class="pl-k">private</span> <span class="pl-smi">Reactor</span> reactor;
+    <span class="pl-k">private</span> <span class="pl-smi">TestTimer</span> testTimer;
+    <span class="pl-k">private</span> <span class="pl-smi">Consul</span> consul;
+
+<span class="pl-c1">...</span>
+        consul <span class="pl-k">=</span> <span class="pl-smi">Consul</span><span class="pl-k">.</span>consul();
+        testTimer <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">TestTimer</span>();
+        testTimer<span class="pl-k">.</span>setTime();
+        reactor <span class="pl-k">=</span> <span class="pl-smi">Reactor</span><span class="pl-k">.</span>reactor(<span class="pl-smi">Duration</span><span class="pl-k">.</span>ofSeconds(<span class="pl-c1">30</span>), <span class="pl-k">new</span> <span class="pl-smi">TestTimeSource</span>(testTimer));
+        <span class="pl-k">final</span> <span class="pl-smi">String</span> serviceName <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>foo<span class="pl-pds">"</span></span>;
+
+        <span class="pl-smi">ConsulLeadershipProvider</span> provider <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ConsulLeadershipProvider</span>(serviceName, consul, <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>SECONDS</span>, sessionTTL);
+
+        leadershipElector <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ConsulLeadershipElector</span>(provider, serviceName, reactor, <span class="pl-smi">TimeUnit</span><span class="pl-c1"><span class="pl-k">.</span>SECONDS</span>,
+                sessionTTL, newLeaderCheckInterval);
+
+
+        <span class="pl-c">/** Get the current leader. */</span>
+        <span class="pl-k">Promise&lt;<span class="pl-smi">Endpoint</span>&gt;</span> promise <span class="pl-k">=</span> <span class="pl-smi">Promises</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Endpoint</span><span class="pl-k">&gt;</span>blockingPromise();
+        leadershipElector<span class="pl-k">.</span>getLeader(promise);
+
+        assertTrue(promise<span class="pl-k">.</span>expect()<span class="pl-k">.</span>isEmpty());
+
+
+        <span class="pl-c">/** Elect this endpoint as the current leader. */</span>
+        <span class="pl-k">Promise&lt;<span class="pl-smi">Boolean</span>&gt;</span> selfElectPromise <span class="pl-k">=</span> <span class="pl-smi">Promises</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Boolean</span><span class="pl-k">&gt;</span>blockingPromise();
+        leadershipElector<span class="pl-k">.</span>selfElect(<span class="pl-k">new</span> <span class="pl-smi">Endpoint</span>(<span class="pl-s"><span class="pl-pds">"</span>foo.com<span class="pl-pds">"</span></span>, <span class="pl-c1">9091</span>), selfElectPromise);
+
+        assertTrue(<span class="pl-s"><span class="pl-pds">"</span>We are now the leader<span class="pl-pds">"</span></span>, selfElectPromise<span class="pl-k">.</span>get());
+
+
+        <span class="pl-c">/** Get the current leader again.  */</span>
+        <span class="pl-k">Promise&lt;<span class="pl-smi">Endpoint</span>&gt;</span> getLeaderPromise <span class="pl-k">=</span> <span class="pl-smi">Promises</span><span class="pl-k">.</span><span class="pl-k">&lt;</span><span class="pl-smi">Endpoint</span><span class="pl-k">&gt;</span>blockingPromise();
+        leadershipElector<span class="pl-k">.</span>getLeader(getLeaderPromise);
+
+        <span class="pl-c">/** See if it present. */</span>
+        assertTrue(getLeaderPromise<span class="pl-k">.</span>expect()<span class="pl-k">.</span>isPresent());
+
+        <span class="pl-c">/** See if it has the host foo.com. */</span>
+        assertEquals(<span class="pl-s"><span class="pl-pds">"</span>foo.com<span class="pl-pds">"</span></span>, getLeaderPromise<span class="pl-k">.</span>get()<span class="pl-k">.</span>getHost());
+
+        <span class="pl-c">/** See if the port is 9091. */</span>
+        assertEquals(<span class="pl-c1">9091</span>, getLeaderPromise<span class="pl-k">.</span>get()<span class="pl-k">.</span>getPort());
+
+        testTimer<span class="pl-k">.</span>seconds(<span class="pl-c1">100</span>);
+
+        leadershipElector<span class="pl-k">.</span>process();
+
+        <span class="pl-c">/** Elect a new leader. */</span>
+        leadershipElector<span class="pl-k">.</span>selfElect(<span class="pl-k">new</span> <span class="pl-smi">Endpoint</span>(<span class="pl-s"><span class="pl-pds">"</span>foo2.com<span class="pl-pds">"</span></span>, <span class="pl-c1">9092</span>), selfElectPromise);
+</pre></div>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/advantageous">advantageous</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
