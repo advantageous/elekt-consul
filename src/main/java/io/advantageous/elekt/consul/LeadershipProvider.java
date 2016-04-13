@@ -1,6 +1,6 @@
 package io.advantageous.elekt.consul;
 
-import io.advantageous.czarmaker.Endpoint;
+import io.advantageous.elekt.Endpoint;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;

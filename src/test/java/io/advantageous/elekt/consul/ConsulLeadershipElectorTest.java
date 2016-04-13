@@ -1,7 +1,7 @@
 package io.advantageous.elekt.consul;
 
 import io.advantageous.consul.Consul;
-import io.advantageous.czarmaker.Endpoint;
+import io.advantageous.elekt.Endpoint;
 import io.advantageous.qbit.util.TestTimer;
 import io.advantageous.reakt.promise.Promise;
 import io.advantageous.reakt.promise.Promises;

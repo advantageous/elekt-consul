@@ -10,7 +10,7 @@ import io.advantageous.consul.domain.option.KeyValuePutOptions;
 import io.advantageous.consul.domain.option.RequestOptions;
 import io.advantageous.consul.endpoints.KeyValueStoreEndpoint;
 import io.advantageous.consul.endpoints.SessionEndpoint;
-import io.advantageous.czarmaker.Endpoint;
+import io.advantageous.elekt.Endpoint;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

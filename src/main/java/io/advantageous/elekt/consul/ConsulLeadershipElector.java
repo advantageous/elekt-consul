@@ -1,8 +1,8 @@
 package io.advantageous.elekt.consul;
 
 import io.advantageous.consul.Consul;
-import io.advantageous.czarmaker.Endpoint;
-import io.advantageous.czarmaker.LeaderElector;
+import io.advantageous.elekt.Endpoint;
+import io.advantageous.elekt.LeaderElector;
 import io.advantageous.reakt.Callback;
 import io.advantageous.reakt.Stream;
 import io.advantageous.reakt.reactor.Reactor;
