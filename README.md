@@ -1,5 +1,22 @@
-# czar-maker-consul
+# Czar Maker Consul
 Czar Maker implemented in Consul to do leadership election.
+
+##Getting Started
+
+#### Maven
+```xml
+<dependency>
+    <groupId>io.advantageous.czarmaker</groupId>
+    <artifactId>czar-maker-consul</artifactId>
+    <version>0.1.0.RELEASE</version>
+</dependency>
+```
+
+#### Gradle
+```java
+compile 'io.advantageous.czarmaker:czar-maker-consul:0.1.0.RELEASE'
+```
+
 
 
 #### Sample usage
