@@ -1,5 +1,5 @@
 group 'io.advantageous.czarmaker'
-version '1.0-SNAPSHOT'
+version '0.1.0.RELEASE'
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -25,7 +25,7 @@ dependencies {
     compile group: 'io.advantageous.qbit', name: 'qbit-consul-client', version: '0.9.11-SNAPSHOT'
     //compile group: 'io.advantageous.qbit', name: 'qbit-admin', version: '0.9.9.RELEASE'
     //compile group: 'io.advantageous.qbit', name: 'qbit-vertx', version: '0.9.9.RELEASE'
-    compile group: 'io.advantageous.czarmaker', name: 'czarmaker', version: '1.0-SNAPSHOT'
+    compile group: 'io.advantageous.czarmaker', name: 'czarmaker', version: '1.0.0.RELEASE'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
@@ -68,12 +68,12 @@ uploadArchives {
                 name project.name
                 description "Leadership election interface"
 
-                url 'https://github.com/advantageous/czar-maker'
+                url 'https://github.com/advantageous/czar-maker-consul'
 
                 scm {
-                    url 'scm:git@github.com:advantageous/czar-maker.git'
-                    connection 'scm:git@github.com:advantageous/czar-maker.git'
-                    developerConnection 'scm:git@github.com:advantageous/czar-maker.git'
+                    url 'scm:git@github.com:advantageous/czar-maker-consul.git'
+                    connection 'scm:git@github.com:advantageous/czar-maker-consul.git'
+                    developerConnection 'scm:git@github.com:advantageous/czar-maker-consul.git'
                 }
 
                 licenses {
