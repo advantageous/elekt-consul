@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Czar-maker-consul by advantageous</title>
+    <title>Elekt Consul by advantageous</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-dark.css">
@@ -17,20 +17,25 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Czar-maker-consul</h1>
-        <p>Czar Maker implemented in Consul to do leadership election.</p>
-        <p class="view"><a href="https://github.com/advantageous/czar-maker-consul">View the Project on GitHub <small>advantageous/czar-maker-consul</small></a></p>
+        <h1>Elekt Consul</h1>
+        <p>Elekt implemented in Consul to do leadership election using a Reactive Java lib.</p>
+        <p class="view"><a href="https://github.com/advantageous/elekt-consul">View the Project on GitHub <small>advantageous/elekt-consul</small></a></p>
         <ul>
-          <li><a href="https://github.com/advantageous/czar-maker-consul/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/advantageous/czar-maker-consul/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/advantageous/czar-maker-consul">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/advantageous/elekt-consul/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/advantageous/elekt-consul/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/advantageous/elekt-consul">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
         <h1>
-<a id="czar-maker-consul" class="anchor" href="#czar-maker-consul" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Czar Maker Consul</h1>
+<a id="elekt-consul" class="anchor" href="#elekt-consul" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Elekt Consul</h1>
 
-<p><a href="http://advantageous.github.io/czar-maker/">Czar Maker is a Java</a> lib for leadership election. <strong><em>Czar Maker Consul</em></strong> uses <a href="https://www.consul.io/">Consul</a> to do <a href="https://www.consul.io/docs/guides/leader-election.html">leadership election</a>.</p>
+<p><a href="http://advantageous.github.io/elekt/">Elekt is a Java</a> lib for leadership election. 
+<strong><em>Elekt Consul</em></strong> uses <a href="https://www.consul.io/">Consul</a> to 
+do <a href="https://www.consul.io/docs/guides/leader-election.html">leadership election</a>.</p>
+
+<p>(This project was called Czar Maker Consul but changed. 
+We have Reflekt, Reakt, Conekt and now Elekt.)</p>
 
 <h2>
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
@@ -39,23 +44,23 @@
 <a id="maven" class="anchor" href="#maven" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maven</h4>
 
 <div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
-    &lt;<span class="pl-ent">groupId</span>&gt;io.advantageous.czarmaker&lt;/<span class="pl-ent">groupId</span>&gt;
-    &lt;<span class="pl-ent">artifactId</span>&gt;czar-maker-consul&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;io.advantageous.elekt&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;elekt-consul&lt;/<span class="pl-ent">artifactId</span>&gt;
     &lt;<span class="pl-ent">version</span>&gt;0.1.0.RELEASE&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h4>
 <a id="gradle" class="anchor" href="#gradle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradle</h4>
 
-<div class="highlight highlight-source-java"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>io.advantageous.czarmaker:czar-maker-consul:0.1.0.RELEASE<span class="pl-pds">'</span></span></pre></div>
+<div class="highlight highlight-source-java"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>io.advantageous.elekt:elekt-consul:0.1.0.RELEASE<span class="pl-pds">'</span></span></pre></div>
 
 <h4>
 <a id="sample-usage" class="anchor" href="#sample-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sample usage</h4>
 
 <div class="highlight highlight-source-java"><pre>
 <span class="pl-k">import</span> <span class="pl-smi">io.advantageous.consul.Consul</span>;
-<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.czarmaker.Endpoint</span>;
-<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.czarmaker.consul.*</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.elekt.Endpoint</span>;
+<span class="pl-k">import</span> <span class="pl-smi">io.advantageous.elekt.consul.*</span>;
 <span class="pl-k">import</span> <span class="pl-smi">io.advantageous.qbit.util.TestTimer</span>;
 <span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.promise.Promise</span>;
 <span class="pl-k">import</span> <span class="pl-smi">io.advantageous.reakt.promise.Promises</span>;
@@ -124,8 +129,9 @@
 <li><a href="http://advantageous.github.io/reakt">Reakt Reactive Java</a></li>
 <li><a href="http://advantageous.github.io/reakt-guava/">Reakt Guava Bridge</a></li>
 <li><a href="https://github.com/advantageous/qbit-extensions">QBit Extensions</a></li>
-<li><a href="http://advantageous.github.io/czar-maker-consul/">Czar Maker Consul</a></li>
-<li><a href="http://advantageous.github.io/czar-maker/">Czar Maker</a></li>
+<li><a href="http://advantageous.github.io/elekt-consul/">Elekt Consul</a></li>
+<li><a href="http://advantageous.github.io/elekt/">Elekt</a></li>
+<li><a href="http://www.mammatustech.com/reactive-microservices">Reactive Microservices</a></li>
 </ul>
       </section>
     </div>
