@@ -11,7 +11,7 @@ We have Reflekt, Reakt, Conekt and now Elekt.)
 #### Maven
 ```xml
 <dependency>
-    <groupId>io.advantageous.czarmaker</groupId>
+    <groupId>io.advantageous.elekt</groupId>
     <artifactId>elekt-consul</artifactId>
     <version>0.1.0.RELEASE</version>
 </dependency>
@@ -19,7 +19,7 @@ We have Reflekt, Reakt, Conekt and now Elekt.)
 
 #### Gradle
 ```java
-compile 'io.advantageous.czarmaker:elekt-consul:0.1.0.RELEASE'
+compile 'io.advantageous.elekt:elekt-consul:0.1.0.RELEASE'
 ```
 
 
@@ -28,8 +28,8 @@ compile 'io.advantageous.czarmaker:elekt-consul:0.1.0.RELEASE'
 ```java
 
 import io.advantageous.consul.Consul;
-import io.advantageous.czarmaker.Endpoint;
-import io.advantageous.czarmaker.consul.*;
+import io.advantageous.elekt.Endpoint;
+import io.advantageous.elekt.consul.*;
 import io.advantageous.qbit.util.TestTimer;
 import io.advantageous.reakt.promise.Promise;
 import io.advantageous.reakt.promise.Promises;
