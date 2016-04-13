@@ -1,5 +1,5 @@
-# Czar Maker Consul
-[Czar Maker is a Java](http://advantageous.github.io/czar-maker/) lib for leadership election. ***Czar Maker Consul*** uses [Consul](https://www.consul.io/) to do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
+# Elekt Consul
+[Elekt is a Java](http://advantageous.github.io/elekt/) lib for leadership election. ***Elekt Consul*** uses [Consul](https://www.consul.io/) to do [leadership election](https://www.consul.io/docs/guides/leader-election.html).
 
 ##Getting Started
 
@@ -7,14 +7,14 @@
 ```xml
 <dependency>
     <groupId>io.advantageous.czarmaker</groupId>
-    <artifactId>czar-maker-consul</artifactId>
+    <artifactId>elekt-consul</artifactId>
     <version>0.1.0.RELEASE</version>
 </dependency>
 ```
 
 #### Gradle
 ```java
-compile 'io.advantageous.czarmaker:czar-maker-consul:0.1.0.RELEASE'
+compile 'io.advantageous.czarmaker:elekt-consul:0.1.0.RELEASE'
 ```
 
 
@@ -93,7 +93,7 @@ import io.advantageous.reakt.reactor.TimeSource;
 * [Reakt Reactive Java](http://advantageous.github.io/reakt)
 * [Reakt Guava Bridge](http://advantageous.github.io/reakt-guava/)
 * [QBit Extensions](https://github.com/advantageous/qbit-extensions)
-* [Czar Maker Consul](http://advantageous.github.io/czar-maker-consul/)
-* [Czar Maker](http://advantageous.github.io/czar-maker/)
+* [Elekt Consul](http://advantageous.github.io/elekt-consul/)
+* [Elekt](http://advantageous.github.io/elekt/)
 * [Reactive Microservices](http://www.mammatustech.com/reactive-microservices)
 

@@ -1,4 +1,4 @@
-package io.advantageous.czarmaker.consul;
+package io.advantageous.elekt.consul;
 
 import io.advantageous.czarmaker.Endpoint;
 

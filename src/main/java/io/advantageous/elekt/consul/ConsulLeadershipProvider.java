@@ -1,4 +1,4 @@
-package io.advantageous.czarmaker.consul;
+package io.advantageous.elekt.consul;
 
 import io.advantageous.boon.json.JsonFactory;
 import io.advantageous.consul.Consul;

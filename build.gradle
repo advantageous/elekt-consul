@@ -68,12 +68,12 @@ uploadArchives {
                 name project.name
                 description "Leadership election interface"
 
-                url 'https://github.com/advantageous/czar-maker-consul'
+                url 'https://github.com/advantageous/elekt-consul'
 
                 scm {
-                    url 'scm:git@github.com:advantageous/czar-maker-consul.git'
-                    connection 'scm:git@github.com:advantageous/czar-maker-consul.git'
-                    developerConnection 'scm:git@github.com:advantageous/czar-maker-consul.git'
+                    url 'scm:git@github.com:advantageous/elekt-consul.git'
+                    connection 'scm:git@github.com:advantageous/elekt-consul.git'
+                    developerConnection 'scm:git@github.com:advantageous/elekt-consul.git'
                 }
 
                 licenses {
