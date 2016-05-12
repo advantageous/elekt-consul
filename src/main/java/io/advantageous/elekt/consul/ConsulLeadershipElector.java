@@ -132,7 +132,7 @@ public class ConsulLeadershipElector implements LeaderElector {
     @Override
     public void selfElect(final Endpoint endpoint, final Callback<Boolean> callback) {
 
-        requestExecutorService.submit((Runnable) () -> {
+        requestExecutorService.submit(() -> {
 
             /* If sessionID is null then create a session before we continue. */
             if (sessionId.get() == null) {
@@ -193,7 +193,7 @@ public class ConsulLeadershipElector implements LeaderElector {
     private void notifyNewLeader(final Endpoint newLeaderEndpoint) {
 
         logger.debug("New Leader {} Elected for {} ", newLeaderEndpoint, serviceName);
-        outExecutorService.submit((Runnable) () -> {
+        outExecutorService.submit(() -> {
                     listeners.stream().forEach(endpointStream ->
                             endpointStream.reply(newLeaderEndpoint, false,
                                     () -> listeners.remove(endpointStream)));
@@ -212,7 +212,7 @@ public class ConsulLeadershipElector implements LeaderElector {
 
         final Optional<Callback<Endpoint>> callbackOptional = Optional.ofNullable(callback);
 
-        requestExecutorService.submit((Runnable) () -> {
+        requestExecutorService.submit(() -> {
             /** Load the leader now, not with a long poll. */
             try {
                 final Optional<Endpoint> leaderEndpoint = leadershipProvider.getLeader(modifyIndex);
@@ -310,7 +310,7 @@ public class ConsulLeadershipElector implements LeaderElector {
 
         /** Load the session from consul every session TTL /2 */
         reactor.addRepeatingTask(Duration.ofSeconds(timeUnit.toSeconds(sessionLifeTTL) / 2),
-                () -> requestExecutorService.submit((Runnable) this::renewSession)
+                () -> requestExecutorService.submit(this::renewSession)
         );
 
 
@@ -333,7 +333,7 @@ public class ConsulLeadershipElector implements LeaderElector {
 
     private void asyncCreateSession() {
         /** Load the session from Consul right now. */
-        requestExecutorService.submit((Runnable) this::createSessionFromConsul);
+        requestExecutorService.submit(this::createSessionFromConsul);
     }
 
 

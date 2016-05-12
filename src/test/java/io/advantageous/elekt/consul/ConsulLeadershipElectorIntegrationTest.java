@@ -9,6 +9,7 @@ import io.advantageous.reakt.reactor.Reactor;
 import io.advantageous.reakt.reactor.TimeSource;
 import org.junit.Test;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,13 @@ public class ConsulLeadershipElectorIntegrationTest {
 
     @Test
     public void testSelfElect() throws Exception {
-        consul = Consul.consul();
+
+        final String dockerHost = System.getenv("DOCKER_HOST");
+        final URI dockerHostUri = dockerHost == null ? null : URI.create(dockerHost);
+
+        System.out.printf("DOCKER HOST %s\n", dockerHost);
+
+        consul = dockerHostUri == null ? Consul.consul() : Consul.consul(dockerHostUri.getHost(), 8500);
         testTimer = new TestTimer();
         testTimer.setTime();
         reactor = Reactor.reactor(Duration.ofSeconds(30), new TestTimeSource(testTimer));
@@ -39,21 +46,21 @@ public class ConsulLeadershipElectorIntegrationTest {
 
 
         /** Get the current leader. */
-        Promise<Endpoint> promise = Promises.<Endpoint>blockingPromise();
+        Promise<Endpoint> promise = Promises.blockingPromise();
         leadershipElector.getLeader(promise);
 
         assertTrue(promise.expect().isEmpty());
 
 
         /** Elect this endpoint as the current leader. */
-        Promise<Boolean> selfElectPromise = Promises.<Boolean>blockingPromise();
+        Promise<Boolean> selfElectPromise = Promises.blockingPromise();
         leadershipElector.selfElect(new Endpoint("foo.com", 9091), selfElectPromise);
 
         assertTrue("We are now the leader", selfElectPromise.get());
 
 
         /** Get the current leader again.  */
-        Promise<Endpoint> getLeaderPromise = Promises.<Endpoint>blockingPromise();
+        Promise<Endpoint> getLeaderPromise = Promises.blockingPromise();
         leadershipElector.getLeader(getLeaderPromise);
 
         /** See if it present. */

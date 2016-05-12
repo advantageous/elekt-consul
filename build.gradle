@@ -21,8 +21,7 @@ test.onlyIf { !Boolean.getBoolean('skip.tests') }
 
 
 dependencies {
-
-    compile group: 'io.advantageous.qbit', name: 'qbit-consul-client', version: '1.1.0.RELEASE'
+    compile 'io.advantageous.qbit:qbit-consul-client:1.8.3'
     compile group: 'io.advantageous.elekt', name: 'elekt', version: '1.1.0.RELEASE'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

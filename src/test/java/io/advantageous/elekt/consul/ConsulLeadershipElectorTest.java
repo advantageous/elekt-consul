@@ -50,19 +50,19 @@ public class ConsulLeadershipElectorTest {
         });
 
 
-        Promise<Endpoint> promise = Promises.<Endpoint>blockingPromise();
+        Promise<Endpoint> promise = Promises.blockingPromise();
         leadershipElector.getLeader(promise);
 
         assertTrue(promise.expect().isEmpty());
 
 
-        Promise<Boolean> selfElectPromise = Promises.<Boolean>blockingPromise();
+        Promise<Boolean> selfElectPromise = Promises.blockingPromise();
         leadershipElector.selfElect(new Endpoint("foo.com", 9091), selfElectPromise);
 
         assertTrue("We are now the leader", selfElectPromise.get());
 
 
-        Promise<Endpoint> getLeaderPromise = Promises.<Endpoint>blockingPromise();
+        Promise<Endpoint> getLeaderPromise = Promises.blockingPromise();
         leadershipElector.getLeader(getLeaderPromise);
 
         assertTrue(getLeaderPromise.expect().isPresent());
@@ -97,7 +97,7 @@ public class ConsulLeadershipElectorTest {
         leadershipElector.process();
 
 
-        Promise<Endpoint> getLeaderPromise2 = Promises.<Endpoint>blockingPromise();
+        Promise<Endpoint> getLeaderPromise2 = Promises.blockingPromise();
         leadershipElector.getLeader(getLeaderPromise2);
 
 

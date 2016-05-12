@@ -94,6 +94,20 @@ import io.advantageous.reakt.reactor.TimeSource;
 
 ```
 
+
+## Starting up consul in docker
+
+```
+ docker run -p 8400:8400 -p 8500:8500 \
+            -p 8600:53/udp -h node1 \
+            progrium/consul -server -bootstrap -ui-dir /ui
+```
+
+The above running on OSX should equate to [http://192.168.99.100:8500/ui/#/dc1/services](http://192.168.99.100:8500/ui/#/dc1/services).
+Check your $DOCKER_HOST env if that is not the case.
+
+
+## Related projects
 * [QBit Reactive Microservices](http://advantageous.github.io/qbit/)
 * [Reakt Reactive Java](http://advantageous.github.io/reakt)
 * [Reakt Guava Bridge](http://advantageous.github.io/reakt-guava/)
